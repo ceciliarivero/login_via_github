@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require File.expand_path("settings", File.dirname(__FILE__))
-
 require "cuba"
 require "mote"
 require "cuba/contrib"
@@ -24,7 +22,7 @@ Dir["./filters/**/*.rb"].each { |rb| require rb }
 Cuba.use Rack::MethodOverride
 Cuba.use Rack::Session::Cookie,
   key: "login_via_github",
-  secret: Settings::APP_SECRET
+  secret: ENV.fetch("APP_SECRET")
 
 Cuba.use Rack::Protection
 Cuba.use Rack::Protection::RemoteReferrer
@@ -39,8 +37,8 @@ Cuba.define do
   on "welcome" do
     on param('code') do |code|
       response = Requests.request('POST', 'https://github.com/login/oauth/access_token',
-        data: { client_id: Settings::CLIENT_ID,
-                client_secret: Settings::CLIENT_SECRET,
+        data: { client_id: ENV.fetch("GITHUB_CLIENT_ID"),
+                client_secret: ENV.fetch("GITHUB_CLIENT_SECRET"),
                 code: code })
 
       res.write response.body
