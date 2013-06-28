@@ -36,16 +36,17 @@ Cuba.define do
 
   on "welcome" do
     on param('code') do |code|
-      response = Requests.request('POST', 'https://github.com/login/oauth/access_token',
+      response = Requests.request('POST', ENV.fetch("GITHUB_OAUTH_URL"),
         data: { client_id: ENV.fetch("GITHUB_CLIENT_ID"),
                 client_secret: ENV.fetch("GITHUB_CLIENT_SECRET"),
-                code: code })
+                code: code },
+        headers: { 'Accept' => 'application/json'})
 
-      res.write response.body
-    end
+      access_token = JSON.parse(response.body)["access_token"]
 
-    on default do
-      res.write "No access token received."
+      user = Requests.request('GET', ENV.fetch("GITHUB_API_USER"),
+        params: { access_token: access_token })
+      res.write JSON.parse(user.body)["login"] #=>ceciliarivero
     end
   end
 
