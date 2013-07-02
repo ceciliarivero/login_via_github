@@ -41,16 +41,16 @@ Cuba.define do
   persist_session!
 
   on "welcome" do
-    on param('code') do |code|
-      response = Requests.request('POST', GITHUB_OAUTH_URL,
+    on param("code") do |code|
+      response = Requests.request("POST", GITHUB_OAUTH_URL,
         data: { client_id: GITHUB_CLIENT_ID,
                 client_secret: GITHUB_CLIENT_SECRET,
                 code: code },
-        headers: { 'Accept' => 'application/json'})
+        headers: { "Accept" => "application/json"})
 
       access_token = JSON.parse(response.body)["access_token"]
 
-      user = Requests.request('GET', GITHUB_API_USER,
+      user = Requests.request("GET", GITHUB_API_USER,
         params: { access_token: access_token })
       res.write JSON.parse(user.body)["login"] #=>ceciliarivero
     end
