@@ -19,10 +19,16 @@ Dir["./routes/**/*.rb"].each  { |rb| require rb }
 Dir["./helpers/**/*.rb"].each { |rb| require rb }
 Dir["./filters/**/*.rb"].each { |rb| require rb }
 
+GITHUB_OAUTH_URL = ENV.fetch("GITHUB_OAUTH_URL")
+GITHUB_CLIENT_ID = ENV.fetch("GITHUB_CLIENT_ID")
+GITHUB_CLIENT_SECRET = ENV.fetch("GITHUB_CLIENT_SECRET")
+GITHUB_API_USER = ENV.fetch("GITHUB_API_USER")
+APP_SECRET = ENV.fetch("APP_SECRET")
+
 Cuba.use Rack::MethodOverride
 Cuba.use Rack::Session::Cookie,
   key: "login_via_github",
-  secret: ENV.fetch("APP_SECRET")
+  secret: APP_SECRET
 
 Cuba.use Rack::Protection
 Cuba.use Rack::Protection::RemoteReferrer
@@ -36,15 +42,15 @@ Cuba.define do
 
   on "welcome" do
     on param('code') do |code|
-      response = Requests.request('POST', ENV.fetch("GITHUB_OAUTH_URL"),
-        data: { client_id: ENV.fetch("GITHUB_CLIENT_ID"),
-                client_secret: ENV.fetch("GITHUB_CLIENT_SECRET"),
+      response = Requests.request('POST', GITHUB_OAUTH_URL,
+        data: { client_id: GITHUB_CLIENT_ID,
+                client_secret: GITHUB_CLIENT_SECRET,
                 code: code },
         headers: { 'Accept' => 'application/json'})
 
       access_token = JSON.parse(response.body)["access_token"]
 
-      user = Requests.request('GET', ENV.fetch("GITHUB_API_USER"),
+      user = Requests.request('GET', GITHUB_API_USER,
         params: { access_token: access_token })
       res.write JSON.parse(user.body)["login"] #=>ceciliarivero
     end
