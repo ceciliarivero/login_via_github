@@ -44,8 +44,7 @@ class Guests < Cuba
           res.redirect("/dashboard")
         else
           session[:error] = "There was a problem while Login in."
-          res.write mote("views/layout.mote",
-            content: mote("views/login.mote"))
+          res.redirect("/")
         end
     end
   end
