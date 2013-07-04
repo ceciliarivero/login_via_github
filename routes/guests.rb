@@ -10,10 +10,7 @@ class Guests < Cuba
 
         access_token = JSON.parse(response.body)["access_token"]
 
-        github_user = JSON.parse((Requests.request("GET", GITHUB_API_USER,
-                  params: { access_token: access_token })).body)
-
-        res.redirect("/login/:github_user")
+        res.redirect("/login/#{ access_token }")
       end
 
       on default do
@@ -21,7 +18,10 @@ class Guests < Cuba
       end
     end
 
-    on "login/:github_user" do |github_user|
+    on "login/:access_token" do |access_token|
+        github_user = JSON.parse((Requests.request("GET", GITHUB_API_USER,
+                  params: { access_token: access_token })).body)
+
         params = { github_id: github_user["id"],
                   username: github_user["login"],
                   name: github_user["name"],
