@@ -1,3 +1,1 @@
-% client_id = ENV.fetch("GITHUB_CLIENT_ID")
-<p>Well, hello there!</p>
-<p>We're going to now talk to the GitHub API. Ready? <a href="https://github.com/login/oauth/authorize?client_id={{ client_id }}&scope=user">Click here</a> to begin!</a></p>
+<h2>Welcome!</h2>

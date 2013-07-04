@@ -10,25 +10,19 @@
     href="/css/styles.css"
     rel="stylesheet"
     type="text/css">
-  <title>Cuba</title>
+  <title>Login via GitHub</title>
 </head>
   <body>
     <header>
-      <h1>Cuba</h1>
-      <?xml version="1.0" encoding="UTF-8"?>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1235 1175"
-        width="70px"
-        height="70px">
-        <path
-          fill="#cc3333"
-          d="M0,449h1235l-999,726 382-1175 382,1175z"/>
-      </svg>
-      <p>Ceci n'est pas un framework.</p>
+      <h1>Login via GitHub App</h1>
+      % if current_user
+        <a href="/dashboard">Dashboard</a><a href="/logout">Log out</a>
+      % else
+        <a href="/login">GitHub Login</a>
+      % end
     </header>
-
     <section>
+      {{ mote("views/notices.mote", session: session) }}
       {{content}}
     </section>
   </body>

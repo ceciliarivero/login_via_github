@@ -6,10 +6,22 @@ require "cuba/contrib"
 require "rack/protection"
 require "shield"
 require "requests"
+require "ohm"
+
+GITHUB_OAUTH_URL = ENV.fetch("GITHUB_OAUTH_URL")
+GITHUB_CLIENT_ID = ENV.fetch("GITHUB_CLIENT_ID")
+GITHUB_CLIENT_SECRET = ENV.fetch("GITHUB_CLIENT_SECRET")
+GITHUB_API_USER = ENV.fetch("GITHUB_API_USER")
+APP_SECRET = ENV.fetch("APP_SECRET")
+REDIS_URL = ENV.fetch("REDIS_URL")
 
 Cuba.plugin Cuba::Mote
+Cuba.plugin Mote::Helpers
 Cuba.plugin Cuba::TextHelpers
 Cuba.plugin Shield::Helpers
+
+# Connect to the Redis db
+Ohm.connect(url: REDIS_URL)
 
 # Require all application files.
 Dir["./models/**/*.rb"].each  { |rb| require rb }
@@ -18,12 +30,6 @@ Dir["./routes/**/*.rb"].each  { |rb| require rb }
 # Require all helper files.
 Dir["./helpers/**/*.rb"].each { |rb| require rb }
 Dir["./filters/**/*.rb"].each { |rb| require rb }
-
-GITHUB_OAUTH_URL = ENV.fetch("GITHUB_OAUTH_URL")
-GITHUB_CLIENT_ID = ENV.fetch("GITHUB_CLIENT_ID")
-GITHUB_CLIENT_SECRET = ENV.fetch("GITHUB_CLIENT_SECRET")
-GITHUB_API_USER = ENV.fetch("GITHUB_API_USER")
-APP_SECRET = ENV.fetch("APP_SECRET")
 
 Cuba.use Rack::MethodOverride
 Cuba.use Rack::Session::Cookie,
@@ -37,27 +43,21 @@ Cuba.use Rack::Static,
   urls: %w[/js /css /img],
   root: "./public"
 
+Cuba.plugin Helpers
+
 Cuba.define do
   persist_session!
-
-  on "welcome" do
-    on param("code") do |code|
-      response = Requests.request("POST", GITHUB_OAUTH_URL,
-        data: { client_id: GITHUB_CLIENT_ID,
-                client_secret: GITHUB_CLIENT_SECRET,
-                code: code },
-        headers: { "Accept" => "application/json"})
-
-      access_token = JSON.parse(response.body)["access_token"]
-
-      user = Requests.request("GET", GITHUB_API_USER,
-        params: { access_token: access_token })
-      res.write JSON.parse(user.body)["login"] #=>ceciliarivero
-    end
-  end
 
   on root do
     res.write mote("views/layout.mote",
       content: mote("views/home.mote"))
+  end
+
+  on authenticated(User) do
+    run Users
+  end
+
+  on default do
+    run Guests
   end
 end

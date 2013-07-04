@@ -6,3 +6,4 @@ shield -v 2.0.0
 gemfile -v 0.0.2
 requests -v 0.0.6
 rack -v 1.5.2
+ohm -v 1.3.2

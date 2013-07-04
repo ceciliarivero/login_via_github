@@ -1,0 +1,31 @@
+% user = current_user
+<table>
+  <tr>
+    <td>username:</td>
+    <td>{{ user.username }}</td>
+  </tr>
+  <tr>
+    <td>GitHub ID:</td>
+    <td>{{ user.github_id }}</td>
+  </tr>
+  <tr>
+    <td>Name:</td>
+    <td>{{ user.name }}</td>
+  </tr>
+  <tr>
+    <td>E-mail:</td>
+    <td>{{ user.email }}</td>
+  </tr>
+  <tr>
+    <td>Bio:</td>
+    <td>{{ user.bio }}</td>
+  </tr>
+  <tr>
+    <td>Github account:</td>
+    <td><a href="{{ user.html_url }}">{{ user.username }}</a></td>
+  </tr>
+  <tr>
+    <td>Public Repos:</td>
+    <td>{{ user.public_repos }}</td>
+  </tr>
+</table>
