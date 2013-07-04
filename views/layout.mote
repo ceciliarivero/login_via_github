@@ -18,7 +18,7 @@
       % if current_user
         <a href="/dashboard">Dashboard</a><a href="/logout">Log out</a>
       % else
-        <a href="/login">GitHub Login</a>
+        <a href="/oauth">GitHub Login</a>
       % end
     </header>
     <section>

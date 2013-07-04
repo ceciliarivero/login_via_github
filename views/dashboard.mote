@@ -1,7 +1,7 @@
 % user = current_user
 <table>
   <tr>
-    <td>username:</td>
+    <td>Username:</td>
     <td>{{ user.username }}</td>
   </tr>
   <tr>

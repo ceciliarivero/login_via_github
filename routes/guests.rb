@@ -1,6 +1,6 @@
 class Guests < Cuba
   define do
-    on "login" do
+    on "oauth" do
       on param("code") do |code|
         response = Requests.request("POST", GITHUB_OAUTH_URL,
           data: { client_id: GITHUB_CLIENT_ID,
@@ -10,16 +10,25 @@ class Guests < Cuba
 
         access_token = JSON.parse(response.body)["access_token"]
 
-        user_info = JSON.parse((Requests.request("GET", GITHUB_API_USER,
+        github_user = JSON.parse((Requests.request("GET", GITHUB_API_USER,
                   params: { access_token: access_token })).body)
 
-        params = { github_id: user_info["id"],
-                  username: user_info["login"],
-                  name: user_info["name"],
-                  email: user_info["email"],
-                  bio: user_info["bio"],
-                  html_url: user_info["html_url"],
-                  public_repos: user_info["public_repos"] }
+        res.redirect("/login/:github_user")
+      end
+
+      on default do
+        res.redirect "#{ GITHUB_OAUTH_LOGIN }?client_id=#{ GITHUB_CLIENT_ID }&scope=user"
+      end
+    end
+
+    on "login/:github_user" do |github_user|
+        params = { github_id: github_user["id"],
+                  username: github_user["login"],
+                  name: github_user["name"],
+                  email: github_user["email"],
+                  bio: github_user["bio"],
+                  html_url: github_user["html_url"],
+                  public_repos: github_user["public_repos"] }
 
         login = Login.new(params)
 
@@ -38,11 +47,6 @@ class Guests < Cuba
           res.write mote("views/layout.mote",
             content: mote("views/login.mote"))
         end
-      end
-
-      on default do
-        res.redirect "https://github.com/login/oauth/authorize?client_id=#{ GITHUB_CLIENT_ID }&scope=user"
-      end
     end
   end
 end
