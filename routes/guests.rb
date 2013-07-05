@@ -23,28 +23,25 @@ class Guests < Cuba
                   params: { access_token: access_token })).body)
 
         params = { github_id: github_user["id"],
-                  username: github_user["login"],
-                  name: github_user["name"],
-                  email: github_user["email"],
-                  bio: github_user["bio"],
-                  html_url: github_user["html_url"],
-                  public_repos: github_user["public_repos"] }
+                  username: github_user["login"] }
+        github_user.each do |key, value|
+          if key == "name" || key == "email" || key == "bio" ||
+            key == "html_url" || key == "public_repos"
+            params[key] = value
+          end
+        end
 
         login = Login.new(params)
 
         if login.valid?
           user = User.create(params)
-          user.save
           authenticate(user)
           session[:success] = "You have successfully logged in."
           res.redirect("/dashboard")
-        elsif User.with(:github_id, login.github_id)
+        else
           authenticate(User.with(:github_id, login.github_id))
           session[:success] = "You have successfully logged in."
           res.redirect("/dashboard")
-        else
-          session[:error] = "There was a problem while Login in."
-          res.redirect("/")
         end
     end
   end
