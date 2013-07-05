@@ -22,14 +22,12 @@ class Guests < Cuba
         github_user = JSON.parse((Requests.request("GET", GITHUB_API_USER,
                   params: { access_token: access_token })).body)
 
-        params = { github_id: github_user["id"],
-                  username: github_user["login"] }
-        github_user.each do |key, value|
-          if key == "name" || key == "email" || key == "bio" ||
-            key == "html_url" || key == "public_repos"
-            params[key] = value
-          end
-        end
+        keys = %w(name email bio html_url public_repos)
+
+        params = github_user.reject { |key| !keys.include?(key.to_s) }
+
+        params[:github_id] = github_user["id"]
+        params[:username] = github_user["login"]
 
         login = Login.new(params)
 
