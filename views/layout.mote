@@ -15,6 +15,7 @@
   <body>
     <header>
       <h1>Login via GitHub App</h1>
+      <a href="/">Home</a>
       % if current_user
         <a href="/dashboard">Dashboard</a><a href="/logout">Log out</a>
       % else
