@@ -24,10 +24,11 @@ class Guests < Cuba
 
         keys = %w(name email bio html_url public_repos)
 
-        params = github_user.reject { |key| !keys.include?(key.to_s) }
+        params = { github_id: github_user["id"], username: github_user["login"] }
 
-        params[:github_id] = github_user["id"]
-        params[:username] = github_user["login"]
+        keys.each do |key|
+          params[key] = github_user[key]
+        end
 
         login = Login.new(params)
 
