@@ -17,4 +17,8 @@ module GitHub
     return JSON.parse((Requests.request("GET", GITHUB_API_USER,
           params: { access_token: access_token })).body)
   end
+
+  def self.oauth_url
+    return "#{ GITHUB_OAUTH_LOGIN }?client_id=#{ GITHUB_CLIENT_ID }&scope=user"
+  end
 end

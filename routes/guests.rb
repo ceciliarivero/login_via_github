@@ -7,7 +7,7 @@ class Guests < Cuba
       end
 
       on default do
-        res.redirect "#{ GITHUB_OAUTH_LOGIN }?client_id=#{ GITHUB_CLIENT_ID }&scope=user"
+        res.redirect GitHub.oauth_url
       end
     end
 
