@@ -28,11 +28,11 @@ class Guests < Cuba
           user = User.create(params)
           authenticate(user)
           session[:success] = "You have successfully logged in."
-          res.redirect("/dashboard")
+          res.redirect "/dashboard"
         else
           authenticate(User.with(:github_id, login.github_id))
           session[:success] = "You have successfully logged in."
-          res.redirect("/dashboard")
+          res.redirect "/dashboard"
         end
     end
   end
