@@ -2,15 +2,8 @@ class Guests < Cuba
   define do
     on "oauth" do
       on param("code") do |code|
-        response = Requests.request("POST", GITHUB_OAUTH_URL,
-          data: { client_id: GITHUB_CLIENT_ID,
-                  client_secret: GITHUB_CLIENT_SECRET,
-                  code: code },
-          headers: { "Accept" => "application/json"})
-
-        access_token = JSON.parse(response.body)["access_token"]
-
-        res.redirect("/login/#{ access_token }")
+        access_token = GitHub.fetch_access_token(code)
+        res.redirect GitHub.login_url(access_token)
       end
 
       on default do
@@ -19,8 +12,7 @@ class Guests < Cuba
     end
 
     on "login/:access_token" do |access_token|
-        github_user = JSON.parse((Requests.request("GET", GITHUB_API_USER,
-                  params: { access_token: access_token })).body)
+        github_user = GitHub.fetch_user(access_token)
 
         keys = %w(name email bio html_url public_repos)
 

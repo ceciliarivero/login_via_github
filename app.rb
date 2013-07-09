@@ -32,6 +32,8 @@ Dir["./routes/**/*.rb"].each  { |rb| require rb }
 Dir["./helpers/**/*.rb"].each { |rb| require rb }
 Dir["./filters/**/*.rb"].each { |rb| require rb }
 
+Cuba.plugin Cuba::Helpers
+
 Cuba.use Rack::MethodOverride
 Cuba.use Rack::Session::Cookie,
   key: "login_via_github",
@@ -44,7 +46,6 @@ Cuba.use Rack::Static,
   urls: %w[/js /css /img],
   root: "./public"
 
-Cuba.plugin Helpers
 
 Cuba.define do
   persist_session!
