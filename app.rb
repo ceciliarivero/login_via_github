@@ -32,6 +32,9 @@ Dir["./routes/**/*.rb"].each  { |rb| require rb }
 Dir["./helpers/**/*.rb"].each { |rb| require rb }
 Dir["./filters/**/*.rb"].each { |rb| require rb }
 
+# Require all module files.
+Dir["./lib/**/*.rb"].each { |rb| require rb }
+
 Cuba.plugin Cuba::Helpers
 
 Cuba.use Rack::MethodOverride
