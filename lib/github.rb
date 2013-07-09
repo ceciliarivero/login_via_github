@@ -6,7 +6,7 @@ module GitHub
               code: code },
       headers: { "Accept" => "application/json"})
 
-    return (JSON.parse(response.body)["access_token"])
+    return JSON.parse(response.body)["access_token"]
   end
 
   def self.login_url(access_token)
@@ -14,7 +14,7 @@ module GitHub
   end
 
   def self.fetch_user(access_token)
-    return (JSON.parse((Requests.request("GET", GITHUB_API_USER,
-          params: { access_token: access_token })).body))
+    return JSON.parse((Requests.request("GET", GITHUB_API_USER,
+          params: { access_token: access_token })).body)
   end
 end
