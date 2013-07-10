@@ -16,16 +16,7 @@
     <td>E-mail:</td>
     <td>{{ user.email }}</td>
   </tr>
-  <tr>
-    <td>Bio:</td>
-    <td>{{ user.bio }}</td>
-  </tr>
-  <tr>
     <td>Github account:</td>
-    <td><a href="{{ user.html_url }}">{{ user.username }}</a></td>
-  </tr>
-  <tr>
-    <td>Public Repos:</td>
-    <td>{{ user.public_repos }}</td>
+    <td><a href="https://github.com/{{ user.username }}">https://github.com/{{ user.username }}</a></td>
   </tr>
 </table>

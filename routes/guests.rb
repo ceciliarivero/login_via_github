@@ -22,14 +22,10 @@ class Guests < Cuba
     on "login/:access_token" do |access_token|
         github_user = GitHub.fetch_user(access_token)
 
-        keys = %w(name email bio html_url public_repos)
-
         params = { github_id: github_user["id"],
-                  username: github_user["login"] }
-
-        keys.each do |key|
-          params[key] = github_user[key]
-        end
+                  username: github_user["login"],
+                  name: github_user["name"],
+                  email: github_user["email"] }
 
         login = Login.new(params)
 

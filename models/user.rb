@@ -5,9 +5,6 @@ class User < Ohm::Model
   attribute :github_id
   attribute :name
   attribute :email
-  attribute :bio
-  attribute :html_url
-  attribute :public_repos
 
   unique :github_id
 
