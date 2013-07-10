@@ -22,7 +22,7 @@ class Guests < Cuba
     on "login/:access_token" do |access_token|
       github_user = GitHub.fetch_user(access_token)
 
-      user = User.with(:github_id, github_user["id"])
+      user = User.fetch(github_user["id"])
 
       if user.nil?
         signup = Signup.new(github_id: github_user["id"],
