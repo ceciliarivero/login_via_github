@@ -1,4 +1,4 @@
-class Login < Scrivener
+class Signup < Scrivener
   attr_accessor :github_id,:username, :name, :email
 
   def validate

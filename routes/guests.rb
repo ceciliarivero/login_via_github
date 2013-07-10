@@ -20,25 +20,22 @@ class Guests < Cuba
     end
 
     on "login/:access_token" do |access_token|
-        github_user = GitHub.fetch_user(access_token)
+      github_user = GitHub.fetch_user(access_token)
 
-        params = { github_id: github_user["id"],
+      user = User.with(:github_id, github_user["id"])
+
+      if user.nil?
+        signup = Signup.new(github_id: github_user["id"],
                   username: github_user["login"],
                   name: github_user["name"],
-                  email: github_user["email"] }
+                  email: github_user["email"])
 
-        login = Login.new(params)
+        user = User.create(signup.attributes) if signup.valid?
+      end
 
-        if login.valid?
-          user = User.create(params)
-          authenticate(user)
-          session[:success] = "You have successfully logged in."
-          res.redirect "/dashboard"
-        else
-          authenticate(User.with(:github_id, login.github_id))
-          session[:success] = "You have successfully logged in."
-          res.redirect "/dashboard"
-        end
+      authenticate(user)
+      session[:success] = "You have successfully logged in."
+      res.redirect "/dashboard"
     end
   end
 end
