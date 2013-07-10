@@ -3,7 +3,15 @@ class Guests < Cuba
     on "oauth" do
       on param("code") do |code|
         access_token = GitHub.fetch_access_token(code)
-        res.redirect GitHub.login_url(access_token)
+
+        on access_token.nil? do
+          session[:error] = "There were authentication problems."
+          res.redirect "/"
+        end
+
+        on default do
+          res.redirect GitHub.login_url(access_token)
+        end
       end
 
       on default do

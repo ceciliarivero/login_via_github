@@ -4,7 +4,7 @@ module GitHub
       data: { client_id: GITHUB_CLIENT_ID,
               client_secret: GITHUB_CLIENT_SECRET,
               code: code },
-      headers: { "Accept" => "application/json"})
+      headers: { "Accept" => "application/json" })
 
     return JSON.parse(response.body)["access_token"]
   end
