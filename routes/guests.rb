@@ -25,12 +25,10 @@ class Guests < Cuba
       user = User.fetch(github_user["id"])
 
       if user.nil?
-        signup = Signup.new(github_id: github_user["id"],
-                  username: github_user["login"],
-                  name: github_user["name"],
-                  email: github_user["email"])
-
-        user = User.create(signup.attributes) if signup.valid?
+        user = User.create(github_id: github_user["id"],
+                          username: github_user["login"],
+                          name: github_user["name"],
+                          email: github_user["email"])
       end
 
       authenticate(user)
